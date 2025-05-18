@@ -1,0 +1,99 @@
+Task 1
+OpenVPN is an open-source software application that enables the creation of a secure,
+encrypted connection between two points over the internet — commonly known as a
+Virtual Private Network (VPN). You can easily set up an OpenVPN server instance on
+Ubuntu by following the steps in the oDicial documentation: Ubuntu OpenVPN Setup
+Guide
+(https://documentation.ubuntu.com/server/how-to/security/install-
+openvpn/index.html). The goal of this task is to create a custom authorization server in
+Django using Django REST Framework (DRF) that supports two-factor authentication
+(2FA) — via SMS and Google Authenticator — for OpenVPN session authorization. To
+achieve this, you need to:
+	- Create a Django application with endpoint(s) that support two-step login.
+		o Step 1: Authenticate the user using a username and password.
+		o Step 2: Verify the second factor, either an SMS code or a Google
+				  Authenticator code, depending on the user's enabled method.
+
+	- Create a Django application that listens to the OpenVPN management interface
+		(see the OpenVPN Management Interface Documentation - https://openvpn.net/community-resources/management-interface/).
+		This application should only authorize OpenVPN sessions only for users who provide 
+		correct credentials and satisfy the static or dynamic challenge requirements.
+
+
+Task 2
+Implement an PATCH API endpoint for a Company object along with its related objects.
+Endpoint should allow partial updates and support adding, updating, and removing
+nested items. All changes must be recorded in a ChangeLog table. If there are no
+changes, no changelog entry should be created.
+You should be able to edit all ﬁelds except for pid (public id). Each pid is a unique 16-
+digit random number assigned when the object is created.
+Request example:
+PATCH /api/v1.0/company/<pid>
+
+{
+"pid": "2374910283749102",
+"name": "Acme Inc.",
+"date_of_incorporation": "2020-01-15",
+"taxinfo": [
+{
+"pid": "9843271092834710",
+"tin": "COMPANYTIN123",
+"country": "US"
+}
+],
+"directors": [
+{
+"pid": "5839201748293746",
+"full_name": "Jane Smith",
+"taxinfo": [
+{
+"pid": "1029384756102938",
+"tin": "123456789",
+"country": "US"
+}
+],
+"identity_ﬁles": [
+{
+"pid": "2345678912345678"
+},
+{
+"pid": "3456789123456789"
+}
+]
+}
+],
+"shareholders": [
+{
+"pid": "9988776655443322",
+"full_name": "Alex Johnson",
+"percentage": 25,
+"identity_ﬁles": [
+{
+"pid": "1122334455667788"
+},
+{
+"pid": "2233445566778899"
+}
+]
+}
+]
+}
+
+What to do:
+Implement A PATCH endpoint to update a Company and its nested objects with the
+following editable ﬁelds:
+- Company ﬁelds
+- Company taxinfo (list)
+- Directors and their taxinfo and identity_ﬁles
+- Shareholders and their identity_ﬁles
+The endpoint must support adding, updating, and removing nested objects.
+
+Additionally for auditing purposes each company changes need to be recorded in
+ChangeLog table. The record must include:
+- change_type: str, added / removed / updated
+- object_type: str, e.g. Director, Shareholder, TaxInfo
+- object_pid: str, the 16-digit of the changed object
+- changes: optional dict, for updated – a dictionary of changed ﬁelds with their old and new values
+- timestamp: when the change occurred
+
+Please add comprehensive automated tests for implemented solution.
